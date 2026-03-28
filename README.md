@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="VivAgents" width="200" />
+</p>
+
 # VivAgents
 
 Standalone HTTP server that wraps **Claude Code**, **Codex CLI**, and **Gemini CLI** behind a simple REST API.

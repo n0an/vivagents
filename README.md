@@ -37,17 +37,27 @@ Requires **Node.js 20+** (for Codex and Gemini CLIs). Claude Code installs stand
 
 ## Quick Start
 
+### Option A: npm (recommended)
+
 ```bash
-# Clone and build
+npx vivagents check    # Check which CLIs are available
+npx vivagents start    # Start the server
+```
+
+Or install globally:
+
+```bash
+npm install -g vivagents
+vivagents start
+```
+
+### Option B: from source
+
+```bash
 git clone https://github.com/n0an/vivagents.git
 cd vivagents
 npm install
 npm run build
-
-# Check which CLIs are available
-node dist/index.js check
-
-# Start the server
 node dist/index.js start
 ```
 

@@ -43,6 +43,7 @@ Your App ──► VivAgents Server ──► Claude / Codex / Gemini CLI
 - **Three providers** — Claude Code (Anthropic), Codex CLI (OpenAI), Gemini CLI (Google)
 - **Auto-discovery** — finds CLI binaries via PATH, nvm, and common install locations
 - **Bearer token auth** — auto-generated, stored in `~/.vivagents/token`
+- **Stateless** — each request is independent, no conversation history or sessions
 - **Zero external dependencies** — just Node.js standard library
 
 **Beyond VivaDicta**, you can use VivAgents for any text processing workflow — shell scripts, iOS Shortcuts, Automator actions, or any app that can make HTTP requests. If you already pay for a CLI subscription, VivAgents turns it into a network-accessible AI API.

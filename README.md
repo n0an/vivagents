@@ -4,7 +4,7 @@ Standalone HTTP server that wraps **Claude Code**, **Codex CLI**, and **Gemini C
 
 Run it on your Mac, a Linux VPS, or anywhere Node.js runs — then connect your apps over the network for AI text processing without needing each device to have CLI tools installed.
 
-Built as a companion server for [VivaDicta](https://vivadicta.com) (iOS/macOS speech-to-text app), but the API is generic enough for any client.
+Built primarily as a companion server for [VivaDicta](https://vivadicta.com) (iOS/macOS speech-to-text app with AI processing), but the API is simple and generic — any app, script, or automation can use it to send text and get AI-processed results back over HTTP.
 
 ## How It Works
 
@@ -20,6 +20,8 @@ Your App ──► VivAgents Server ──► Claude / Codex / Gemini CLI
 - **Auto-discovery** — finds CLI binaries via PATH, nvm, and common install locations
 - **Bearer token auth** — auto-generated, stored in `~/.vivagents/token`
 - **Zero external dependencies** — just Node.js standard library
+
+**Beyond VivaDicta**, you can use VivAgents for any text processing workflow — shell scripts, iOS Shortcuts, Automator actions, or any app that can make HTTP requests. If you already pay for a CLI subscription, VivAgents turns it into a network-accessible AI API.
 
 ## Prerequisites
 

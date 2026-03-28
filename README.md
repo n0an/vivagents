@@ -340,6 +340,20 @@ vivagents/
 └── tsconfig.json
 ```
 
+## Contributing
+
+Contributions are welcome! Feel free to open issues and pull requests.
+
+```bash
+git clone https://github.com/n0an/vivagents.git
+cd vivagents
+npm install
+npm run build
+node dist/index.js check
+```
+
+If you'd like to add support for a new CLI provider, look at `src/providers/claude.ts` as a reference — each provider implements the `CLIProvider` interface.
+
 ## License
 
 MIT

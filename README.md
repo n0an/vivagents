@@ -335,6 +335,29 @@ vivagents start    # Binds to 0.0.0.0:3456
 curl http://<tailscale-ip>:3456/health
 ```
 
+### Public access with HTTPS
+
+If you need to expose VivAgents on a public IP, put it behind a reverse proxy with TLS. [Caddy](https://caddyserver.com) is the easiest option — it auto-provisions HTTPS certificates via Let's Encrypt:
+
+1. Install Caddy: `sudo apt install caddy`
+2. Edit `/etc/caddy/Caddyfile`:
+
+```
+vivagents.yourdomain.com {
+    reverse_proxy localhost:3456
+}
+```
+
+3. Bind VivAgents to localhost only:
+
+```bash
+vivagents start --host 127.0.0.1
+```
+
+4. Restart Caddy: `sudo systemctl restart caddy`
+
+Caddy handles TLS on port 443, forwards to VivAgents on localhost:3456. Your auth token is transmitted encrypted. Point your DNS A record to your server's public IP.
+
 ### CLI authentication on a headless server
 
 CLI tools require browser-based authentication on first use. On a headless VPS:

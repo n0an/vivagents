@@ -6,6 +6,8 @@ Run it on your Mac, a Linux VPS, or anywhere Node.js runs — then connect your 
 
 Built primarily as a companion server for [VivaDicta](https://vivadicta.com) (iOS/macOS speech-to-text app with AI processing), but the API is simple and generic — any app, script, or automation can use it to send text and get AI-processed results back over HTTP.
 
+> **Disclaimer:** Claude Code, Codex CLI, and Gemini CLI are designed and licensed for software development use. Using them for general text processing may fall outside the intended use of their respective providers and could lead to account restrictions. By using VivAgents you acknowledge this and proceed at your own risk. VivAgents is not affiliated with Anthropic, OpenAI, or Google. For unrestricted usage, consider using direct API keys from each provider instead.
+
 ## How It Works
 
 VivAgents discovers installed CLI tools on the host machine, starts an HTTP server, and proxies text processing requests to the appropriate CLI:

@@ -252,13 +252,15 @@ VIVAGENTS_GEMINI_PATH=/path/to/gemini
 ### Run with PM2 (recommended for always-on)
 
 ```bash
-npm install -g pm2
-pm2 start dist/index.js --name vivagents
+npm install -g vivagents pm2
+pm2 start vivagents -- start
 pm2 save
 pm2 startup    # Auto-start on boot
 ```
 
 ### Run as systemd service (Linux)
+
+First install globally: `npm install -g vivagents`, then find the path: `which vivagents`.
 
 Create `/etc/systemd/system/vivagents.service`:
 
@@ -270,11 +272,10 @@ After=network.target
 [Service]
 Type=simple
 User=your-user
-WorkingDirectory=/path/to/vivagents
-ExecStart=/usr/bin/node dist/index.js start
+ExecStart=/path/from/which/vivagents start
 Restart=always
 RestartSec=5
-Environment=VIVAGENTS_PORT=3456
+Environment=PATH=/usr/local/bin:/usr/bin:/your/node/bin
 
 [Install]
 WantedBy=multi-user.target

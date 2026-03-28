@@ -7,6 +7,7 @@ import { CodexProvider } from './providers/codex.js';
 import { GeminiProvider } from './providers/gemini.js';
 import type { CLIProvider } from './providers/types.js';
 import { startServer } from './server.js';
+import { runDoctor } from './doctor.js';
 
 function parseArgs(argv: string[]): { command: string; args: CLIArgs; flags: Set<string> } {
   const command = argv[2] ?? 'start';
@@ -42,6 +43,7 @@ Usage:
 Commands:
   start          Start the server (default)
   check          Check which CLI providers are available
+  doctor         Diagnose issues (binary, auth, port, config)
   token          Show the current auth token
   token --reset  Generate a new auth token
   help           Show this help message
@@ -109,6 +111,14 @@ switch (command) {
       }
     }
     console.log();
+    break;
+  }
+
+  case 'doctor': {
+    const config = loadConfig(args);
+    setLogLevel('error');
+    const providers = createProviders(config);
+    await runDoctor(config, providers);
     break;
   }
 

@@ -94,7 +94,7 @@ export function startServer(
         break;
       }
 
-      case 'POST /enhance': {
+      case 'POST /process': {
         const result = await handleEnhance(
           bodyJSON as { text: string; systemPrompt?: string; model?: string; provider?: string },
           providers

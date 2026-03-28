@@ -43,7 +43,7 @@ export async function handleEnhance(
 
   const model = body.model || providerInstance.defaultModel;
 
-  logger.info(`/enhance request: provider=${providerName}, model=${model}, textLength=${text.length}`);
+  logger.info(`/process request: provider=${providerName}, model=${model}, textLength=${text.length}`);
 
   const startTime = Date.now();
 
@@ -51,7 +51,7 @@ export async function handleEnhance(
     const result = await providerInstance.enhance({ text, systemPrompt, model });
     const duration = Math.round((Date.now() - startTime) / 10) / 100;
 
-    logger.info(`/enhance success: provider=${providerName}, model=${model}, resultLength=${result.length}, duration=${duration}s`);
+    logger.info(`/process success: provider=${providerName}, model=${model}, resultLength=${result.length}, duration=${duration}s`);
 
     return {
       status: 200,
@@ -63,7 +63,7 @@ export async function handleEnhance(
     const code = error.code ?? 'EXECUTION_FAILED';
     const status = error.status ?? 500;
 
-    logger.error(`/enhance FAILED: provider=${providerName}, code=${code}, duration=${duration}s, error=${error.message}`);
+    logger.error(`/process FAILED: provider=${providerName}, code=${code}, duration=${duration}s, error=${error.message}`);
 
     return {
       status,

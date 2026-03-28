@@ -125,7 +125,7 @@ curl -H "Authorization: Bearer $TOKEN" http://localhost:3456/models
 }
 ```
 
-### `POST /enhance`
+### `POST /process`
 
 Process text through a CLI provider.
 
@@ -138,7 +138,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
     "provider": "gemini",
     "model": "gemini-2.5-flash"
   }' \
-  http://localhost:3456/enhance
+  http://localhost:3456/process
 ```
 
 ```json
@@ -222,7 +222,7 @@ Set `"path"` to override auto-detection for a specific CLI. Set `"enabled": fals
 }
 ```
 
-Disabled providers won't appear in `/health` or `/models` responses, and `/enhance` requests to them will return an error. You only need to include the fields you want to change — defaults apply for everything else.
+Disabled providers won't appear in `/health` or `/models` responses, and `/process` requests to them will return an error. You only need to include the fields you want to change — defaults apply for everything else.
 
 ### Environment Variables
 
@@ -316,7 +316,7 @@ vivagents/
 │   ├── routes/
 │   │   ├── health.ts         # GET /health
 │   │   ├── models.ts         # GET /models
-│   │   └── enhance.ts        # POST /enhance
+│   │   └── enhance.ts        # POST /process
 │   └── utils/
 │       ├── process.ts        # Child process spawning
 │       └── error-detection.ts

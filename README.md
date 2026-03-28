@@ -331,7 +331,7 @@ vivagents/
 │   ├── routes/
 │   │   ├── health.ts         # GET /health
 │   │   ├── models.ts         # GET /models
-│   │   └── enhance.ts        # POST /process
+│   │   └── enhance.ts        # POST /process handler
 │   └── utils/
 │       ├── process.ts        # Child process spawning
 │       └── error-detection.ts

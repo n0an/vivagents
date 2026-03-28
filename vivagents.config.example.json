@@ -1,0 +1,26 @@
+{
+  "port": 3456,
+  "host": "0.0.0.0",
+  "timeout": 90000,
+  "logLevel": "info",
+  "providers": {
+    "claude": {
+      "enabled": true,
+      "path": null,
+      "models": ["claude-sonnet-4-6", "claude-opus-4-6", "claude-haiku-4-5"],
+      "defaultModel": "claude-sonnet-4-6"
+    },
+    "codex": {
+      "enabled": true,
+      "path": null,
+      "models": ["gpt-5.4", "gpt-5.4-mini", "gpt-5.2", "gpt-5.1"],
+      "defaultModel": "gpt-5.4"
+    },
+    "gemini": {
+      "enabled": true,
+      "path": null,
+      "models": ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-3-pro-preview", "gemini-3-flash-preview"],
+      "defaultModel": "gemini-2.5-flash"
+    }
+  }
+}

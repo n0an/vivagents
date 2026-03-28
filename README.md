@@ -209,6 +209,20 @@ Create `~/.vivagents/config.json` (or `vivagents.config.json` in the working dir
 
 Set `"path"` to override auto-detection for a specific CLI. Set `"enabled": false` to disable a provider.
 
+**Example: only allow Claude, disable Codex and Gemini:**
+
+```json
+{
+  "providers": {
+    "claude": { "enabled": true },
+    "codex": { "enabled": false },
+    "gemini": { "enabled": false }
+  }
+}
+```
+
+Disabled providers won't appear in `/health` or `/models` responses, and `/enhance` requests to them will return an error. You only need to include the fields you want to change — defaults apply for everything else.
+
 ### Environment Variables
 
 ```bash

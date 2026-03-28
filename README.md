@@ -63,7 +63,7 @@ npm run build
 node dist/index.js start
 ```
 
-The server starts on port `3456` by default. An auth token is auto-generated on first run.
+The server starts on port `3456` by default. An auth token is auto-generated on first run and stored in `~/.vivagents/token`. Use `vivagents token` to view it.
 
 ```
 2026-03-28T10:38:42.619Z [INFO]  VivAgents server running on http://0.0.0.0:3456

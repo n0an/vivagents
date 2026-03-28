@@ -66,6 +66,7 @@ The server starts on port `3456` by default. An auth token is auto-generated on 
 ```bash
 vivagents start              # Start the server (default)
 vivagents check              # Show which CLIs are available
+vivagents doctor             # Diagnose issues (binary, auth, port, config)
 vivagents token              # Print the current auth token
 vivagents token --reset      # Generate a new auth token
 vivagents help               # Show help

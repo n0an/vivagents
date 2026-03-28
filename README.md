@@ -312,6 +312,16 @@ sudo systemctl enable vivagents
 sudo systemctl start vivagents
 ```
 
+### Security
+
+> **Warning:** VivAgents serves plain HTTP with no TLS. **Do not expose it directly to the public internet.** Your auth token and all request/response data will be transmitted in plaintext and can be intercepted. Use one of these approaches for secure remote access:
+>
+> - **Tailscale** (recommended) — encrypted private network, no public exposure
+> - **Reverse proxy** (Caddy, nginx) — terminate TLS in front of VivAgents
+> - **SSH tunnel** — `ssh -L 3456:localhost:3456 user@vps`
+>
+> For local-only use (same machine), bind to localhost: `vivagents start --host 127.0.0.1`
+
 ### Secure access with Tailscale
 
 For VPS deployments, [Tailscale](https://tailscale.com) provides encrypted private networking without exposing the server to the public internet:

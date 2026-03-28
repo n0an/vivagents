@@ -53,11 +53,20 @@ export class ClaudeProvider implements CLIProvider {
       params.text,
     ];
 
-    const result = await spawnCLI(this.binaryPath, args, { PATH: enrichedPATH() }, this.timeout);
+    // Unset ANTHROPIC_API_KEY so Claude CLI uses OAuth session instead of a potentially stale key
+    const result = await spawnCLI(this.binaryPath, args, { PATH: enrichedPATH(), ANTHROPIC_API_KEY: '' }, this.timeout);
+
+    if (result.stderr) {
+      logger.debug(`Claude stderr: ${result.stderr}`);
+    }
+
     const error = detectError(result.stderr, result.exitCode, result.stdout);
 
     if (error) {
-      throw Object.assign(new Error(error.message), { code: error.code, status: error.status });
+      // Include both stderr and stdout in the error for debugging
+      const fullMessage = result.stderr || result.stdout || error.message;
+      logger.error(`Claude CLI error details: stderr="${result.stderr}", stdout="${result.stdout.slice(0, 200)}"`);
+      throw Object.assign(new Error(fullMessage), { code: error.code, status: error.status });
     }
 
     return result.stdout;

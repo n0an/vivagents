@@ -1,22 +1,50 @@
 {
   "name": "vivagents",
   "version": "1.0.0",
-  "description": "Standalone CLI Agents server for VivaDicta — wraps Claude, Codex, and Gemini CLIs behind a simple HTTP API",
+  "description": "Standalone CLI Agents server — wraps Claude, Codex, and Gemini CLIs behind a simple HTTP API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "bin": {
     "vivagents": "./bin/vivagents.js"
   },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "vivagents.config.example.json",
+    ".env.example"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
   },
-  "keywords": ["cli", "ai", "claude", "codex", "gemini", "vivagents", "vivadicta"],
+  "keywords": [
+    "cli",
+    "ai",
+    "claude",
+    "codex",
+    "gemini",
+    "vivagents",
+    "vivadicta",
+    "llm",
+    "anthropic",
+    "openai",
+    "google"
+  ],
   "author": "Anton Novoselov",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/n0an/vivagents.git"
+  },
+  "homepage": "https://github.com/n0an/vivagents",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devDependencies": {
     "@types/node": "^25.5.0",
     "typescript": "^6.0.2"

@@ -28,7 +28,7 @@ Install and authenticate at least one CLI tool:
 | CLI | Install | Authenticate |
 |-----|---------|-------------|
 | [Claude Code](https://code.claude.com/docs/en/quickstart) | `curl -fsSL https://claude.ai/install.sh \| bash` | Run `claude` and sign in with your Anthropic account |
-| [Codex CLI](https://github.com/openai/codex) | `npm install -g @openai/codex` or `brew install --cask codex` | Run `codex` and select "Sign in with ChatGPT" |
+| [Codex CLI](https://github.com/openai/codex) | `npm install -g @openai/codex` or `brew install codex` | Run `codex` and select "Sign in with ChatGPT" |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | `npm install -g @google/gemini-cli` or `brew install gemini-cli` | Run `gemini` and select "Sign in with Google" |
 
 Requires **Node.js 20+** (for Codex and Gemini CLIs). Claude Code installs standalone with no dependencies.

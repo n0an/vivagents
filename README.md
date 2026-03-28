@@ -236,6 +236,8 @@ Set `"path"` to override auto-detection for a specific CLI. Set `"enabled": fals
 
 Disabled providers won't appear in `/health` or `/models` responses, and `/process` requests to them will return an error. You only need to include the fields you want to change — defaults apply for everything else.
 
+> **Note on model lists:** The default model lists are derived empirically — they include models confirmed to work with each CLI tool at the time of release. CLI providers may support additional models not listed here. You can customize the model list per provider in the config file.
+
 ### Environment Variables
 
 ```bash

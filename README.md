@@ -48,6 +48,8 @@ Your App ──► VivAgents Server ──► Claude / Codex / Gemini CLI
 
 **Beyond VivaDicta**, you can use VivAgents for any text processing workflow — shell scripts, iOS Shortcuts, Automator actions, or any app that can make HTTP requests. If you already pay for a CLI subscription, VivAgents turns it into a network-accessible AI API.
 
+> **Note:** VivAgents is designed for single request-response text processing (grammar correction, rewriting, summarization, translation, etc.) — not for interactive chat. There are no sessions, no conversation memory, no streaming, and no OpenAI-compatible API format. Each request is standalone: you send text in, you get processed text back. If you need a conversational AI proxy or an OpenAI-compatible gateway, check out projects like [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) or [AgentAPI](https://github.com/coder/agentapi).
+
 ## Prerequisites
 
 Install and authenticate at least one CLI tool:

@@ -2,9 +2,27 @@
   <img src="assets/logo.png" alt="VivAgents" width="200" />
 </p>
 
-# VivAgents
+<h1 align="center">VivAgents</h1>
 
-Standalone HTTP server that wraps **Claude Code**, **Codex CLI**, and **Gemini CLI** behind a simple REST API.
+<p align="center">
+  <strong>Standalone CLI Agents server — wraps Claude, Codex, and Gemini CLIs behind a simple HTTP API</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/vivagents"><img src="https://img.shields.io/npm/v/vivagents?color=blue&logo=npm&logoColor=white" alt="npm version"></a>
+  <img src="https://img.shields.io/badge/Node.js-20%2B-339933?logo=nodedotjs&logoColor=white" alt="Node.js 20+">
+  <img src="https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
+  <a href="https://github.com/n0an/vivagents/blob/main/LICENSE"><img src="https://img.shields.io/github/license/n0an/vivagents" alt="License"></a>
+  <a href="https://github.com/n0an/vivagents/stargazers"><img src="https://img.shields.io/github/stars/n0an/vivagents" alt="Stars"></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Claude_Code-Anthropic-d4a574?logo=anthropic&logoColor=white" alt="Claude Code">
+  <img src="https://img.shields.io/badge/Codex_CLI-OpenAI-412991?logo=openai&logoColor=white" alt="Codex CLI">
+  <img src="https://img.shields.io/badge/Gemini_CLI-Google-4285F4?logo=google&logoColor=white" alt="Gemini CLI">
+</p>
+
+---
 
 Run it on your Mac, a Linux VPS, or anywhere Node.js runs — then connect your apps over the network for AI text processing without needing each device to have CLI tools installed.
 

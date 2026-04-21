@@ -1,6 +1,7 @@
 // Copyright © 2026 Anton Novoselov. All rights reserved.
 
 import type { CLIProvider } from '../providers/types.js';
+import { resolveProviderAlias } from '../providers/aliases.js';
 import { logger } from '../logger.js';
 
 interface EnhanceRequest {
@@ -26,7 +27,8 @@ export async function handleEnhance(
   body: EnhanceRequest,
   providers: Map<string, CLIProvider>
 ): Promise<{ status: number; body: EnhanceResponse | ErrorResponse }> {
-  const { text, systemPrompt = '', provider: providerName = 'claude' } = body;
+  const { text, systemPrompt = '', provider: rawProvider = 'claude' } = body;
+  const providerName = resolveProviderAlias(rawProvider);
 
   if (!text || typeof text !== 'string' || !text.trim()) {
     return { status: 400, body: { error: "Missing 'text' field", code: 'INVALID_REQUEST' } };

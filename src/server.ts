@@ -5,6 +5,10 @@ import type { CLIProvider } from './providers/types.js';
 import { handleHealth } from './routes/health.js';
 import { handleModels } from './routes/models.js';
 import { handleEnhance } from './routes/enhance.js';
+import {
+  handleChatCompletionsNonStream,
+  handleChatCompletionsStream,
+} from './routes/chatCompletions.js';
 import { logger } from './logger.js';
 
 function sendJSON(res: ServerResponse, statusCode: number, body: Record<string, unknown>): void {
@@ -100,6 +104,20 @@ export function startServer(
           providers
         );
         sendJSON(res, result.status, result.body as unknown as Record<string, unknown>);
+        break;
+      }
+
+      case 'POST /v1/chat/completions': {
+        const chatBody = (bodyJSON ?? {}) as Record<string, unknown>;
+        const streamRequested = chatBody['stream'] === true;
+
+        if (streamRequested) {
+          // Streaming path takes over the response lifecycle.
+          await handleChatCompletionsStream(chatBody, providers, res);
+        } else {
+          const result = await handleChatCompletionsNonStream(chatBody, providers);
+          sendJSON(res, result.status, result.body);
+        }
         break;
       }
 

@@ -41,14 +41,13 @@ Your App ──► VivAgents Server ──► Claude / Codex / Gemini CLI
 
 - **No API keys needed** — uses your existing CLI subscriptions (Claude Pro/Max, ChatGPT Plus, Google account)
 - **Three providers** — Claude Code (Anthropic), Codex CLI (OpenAI), Gemini CLI (Google)
+- **Two request shapes** — simple `POST /process` for single-shot text processing, OpenAI-compatible `POST /v1/chat/completions` for multi-turn chat with SSE streaming
 - **Auto-discovery** — finds CLI binaries via PATH, nvm, and common install locations
 - **Bearer token auth** — auto-generated, stored in `~/.vivagents/token`
-- **Stateless** — each request is independent, no conversation history or sessions
+- **Stateless** — the server holds no conversation state; multi-turn chat works by having the client re-send the full `messages[]` history on each turn (same model as OpenAI's Chat Completions API)
 - **Zero external dependencies** — just Node.js standard library
 
-**Beyond VivaDicta**, you can use VivAgents for any text processing workflow — shell scripts, iOS Shortcuts, Automator actions, or any app that can make HTTP requests. If you already pay for a CLI subscription, VivAgents turns it into a network-accessible AI API.
-
-> **Note:** VivAgents is designed for single request-response text processing (grammar correction, rewriting, summarization, translation, etc.) — not for interactive chat. There are no sessions, no conversation memory, no streaming, and no OpenAI-compatible API format. Each request is standalone: you send text in, you get processed text back. If you need a conversational AI proxy or an OpenAI-compatible gateway, check out projects like [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) or [AgentAPI](https://github.com/coder/agentapi).
+**Beyond VivaDicta**, you can use VivAgents for any text processing workflow — shell scripts, iOS Shortcuts, Automator actions, or any app that can make HTTP requests. Because the chat endpoint is OpenAI-compatible, any app that already speaks OpenAI or Ollama can point at VivAgents with just a URL change.
 
 ## Prerequisites
 
@@ -193,8 +192,89 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 |-------|------|----------|-------------|
 | `text` | string | Yes | Text to process |
 | `systemPrompt` | string | No | Instructions for the AI |
-| `provider` | string | No | `"claude"` (default), `"codex"`, or `"gemini"` |
+| `provider` | string | No | `"claude"` (default), `"codex"`, or `"gemini"`. Vendor aliases are also accepted: `"anthropic"` → claude, `"openai"` → codex, `"google"` / `"google-ai"` → gemini |
 | `model` | string | No | Model to use (defaults to provider's default) |
+
+### `POST /v1/chat/completions`
+
+OpenAI-compatible chat completions endpoint. Accepts a `messages[]` array and returns either a single JSON response or Server-Sent Events (SSE), matching the shape of OpenAI's Chat Completions API so any OpenAI-compatible client (including the "Ollama" provider path in many apps) can point at VivAgents with zero code changes.
+
+**Currently Claude-only.** Codex and Gemini fall through to a clean "provider does not support chat completions" error until their session models are wired up.
+
+**Stateless:** the server does not store conversation history. On every request, flatten your full conversation into `messages[]` and resend it. This matches how OpenAI's own endpoint behaves.
+
+**Non-streaming example:**
+
+```bash
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4-5",
+    "messages": [
+      {"role": "system", "content": "You reply in one short sentence."},
+      {"role": "user", "content": "say hi"}
+    ],
+    "stream": false
+  }' \
+  http://localhost:3456/v1/chat/completions
+```
+
+```json
+{
+  "id": "chatcmpl-...",
+  "object": "chat.completion",
+  "created": 1776783809,
+  "model": "claude-sonnet-4-5",
+  "choices": [
+    {
+      "index": 0,
+      "message": { "role": "assistant", "content": "Hi!" },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": { "prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0 }
+}
+```
+
+> **Note on `usage`:** VivAgents currently returns zero placeholders for token counts. The surrounding shape is faithful to OpenAI so SDK consumers don't choke; real token counts can be wired in later when a tokenizer is added.
+
+**Streaming example** (`stream: true`):
+
+```bash
+curl -N -X POST -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4-5",
+    "messages": [{"role": "user", "content": "count from 1 to 5"}],
+    "stream": true
+  }' \
+  http://localhost:3456/v1/chat/completions
+```
+
+Returns `text/event-stream` chunks:
+
+```
+data: {"id":"chatcmpl-...","choices":[{"delta":{"role":"assistant"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-...","choices":[{"delta":{"content":"1, 2, 3, 4, 5"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-...","choices":[{"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+```
+
+If the client disconnects mid-stream, the underlying Claude CLI subprocess is terminated to avoid wasted work.
+
+**Parameters:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `messages` | array | Yes | OpenAI-style `[{role, content}]` with roles `system` / `user` / `assistant` |
+| `model` | string | No | Model to use (defaults to provider's default) |
+| `stream` | boolean | No | `true` for SSE, `false` (default) for single JSON response |
+| `provider` | string | No | `"claude"` (default). Also accepts the `anthropic` / `openai` / `google` vendor aliases |
+| `max_tokens` | number | No | Accepted for OpenAI compatibility; currently informational |
+| `temperature` | number | No | Accepted for OpenAI compatibility; currently not forwarded to the CLI |
 
 ### Error Codes
 
@@ -376,24 +456,29 @@ CLI tools require browser-based authentication on first use. On a headless VPS:
 ```
 vivagents/
 ├── src/
-│   ├── index.ts              # Entry point, CLI commands
-│   ├── server.ts             # HTTP server, routing, auth
-│   ├── config.ts             # Config loading (file + env + args)
-│   ├── logger.ts             # Structured logging
+│   ├── index.ts                     # Entry point, CLI commands
+│   ├── server.ts                    # HTTP server, routing, auth
+│   ├── config.ts                    # Config loading (file + env + args)
+│   ├── logger.ts                    # Structured logging
 │   ├── providers/
-│   │   ├── types.ts          # CLIProvider interface
-│   │   ├── discovery.ts      # Binary auto-discovery
-│   │   ├── claude.ts         # Claude Code provider
-│   │   ├── codex.ts          # Codex CLI provider
-│   │   └── gemini.ts         # Gemini CLI provider
+│   │   ├── types.ts                 # CLIProvider interface + chat types
+│   │   ├── aliases.ts               # Vendor-name aliases (anthropic → claude, etc.)
+│   │   ├── discovery.ts             # Binary auto-discovery
+│   │   ├── claude.ts                # Claude Code provider (enhance + chat)
+│   │   ├── codex.ts                 # Codex CLI provider
+│   │   └── gemini.ts                # Gemini CLI provider
 │   ├── routes/
-│   │   ├── health.ts         # GET /health
-│   │   ├── models.ts         # GET /models
-│   │   └── enhance.ts        # POST /process handler
+│   │   ├── health.ts                # GET /health
+│   │   ├── models.ts                # GET /models
+│   │   ├── enhance.ts               # POST /process handler
+│   │   └── chatCompletions.ts       # POST /v1/chat/completions handler
+│   ├── translator/
+│   │   ├── openaiToClaude.ts        # messages[] → flattened prompt
+│   │   └── claudeToOpenaiSSE.ts     # Claude stream-json → OpenAI SSE chunks
 │   └── utils/
-│       ├── process.ts        # Child process spawning
+│       ├── process.ts               # Child process spawning (sync, stdin, streaming)
 │       └── error-detection.ts
-├── bin/vivagents.js           # CLI entry point
+├── bin/vivagents.js                  # CLI entry point
 ├── package.json
 └── tsconfig.json
 ```
